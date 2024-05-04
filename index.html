@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess the Number</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            max-width: 400px;
+            padding: 20px;
+            background-color: #f0f0f0;
+            border-radius: 20px;
+            box-shadow: 10px 10px 20px #bebebe, -10px -10px 20px #ffffff;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        p {
+            margin: 10px 0;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 10px;
+            box-shadow: inset 5px 5px 10px #bebebe, inset -5px -5px 10px #ffffff;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 5px 5px 10px #bebebe, -5px -5px 10px #ffffff;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        p#error {
+            color: rgba(205, 0, 10, 0.832);
+            font-weight: bold;
+            text-shadow: 10px 10px 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Guess the Number Game</h1>
+        <p>Guess a number between <span id="min">1</span> and <span id="max">100</span></p>
+        <input type="number" id="guessInput">
+        <button onclick="checkGuess()">Submit Guess</button>
+        <p id="message"></p>
+    </div>
+    <script>
+        function getRandomNumber(min, max) {
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        }
+        let min = 1;
+        let max = 100;
+        let winningNumber = getRandomNumber(min, max);
+        let guessesLeft = 10;
+        const guessInput = document.getElementById('guessInput');
+        const message = document.getElementById('message');
+        const minSpan = document.getElementById('min');
+        const maxSpan = document.getElementById('max');
+        minSpan.textContent = min;
+        maxSpan.textContent = max;
+        function checkGuess() {
+            let guess = parseInt(guessInput.value);
+
+            if (isNaN(guess) || guess < min || guess > max) {
+                showMessage(`Please enter a number between ${min} and ${max}`, 'red');
+                return;
+            }
+            if (guess === winningNumber) {
+                showMessage(`Congratulations! You guessed the correct number ${winningNumber}!`, 'green');
+                guessInput.disabled = true;
+            } else {
+                guessesLeft--;
+                if (guessesLeft === 0) {
+                    showMessage(`Game over! The correct number was ${winningNumber}.`, 'red');
+                    guessInput.disabled = true;
+                } else {
+                    let hint = guess < winningNumber ? 'higher' : 'lower';
+                    showMessage(`Incorrect! Try again. You have ${guessesLeft} guesses left. Hint: The correct number is ${hint}.`, 'red');
+                }
+            }
+        }
+        function showMessage(msg, color) {
+            message.textContent = msg;
+            message.style.color = color;
+        }
+    </script>
+</body>
+</html>
